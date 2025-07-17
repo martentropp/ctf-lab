@@ -1,33 +1,28 @@
-version: '3.8'
-
 services:
-  # Web Challenges (Vulnerable Web Apps)
-  web-challenges:
-    build: ./web-challenges
-    ports:
-      - "3001:5000"
-    environment:
-      - FLASK_ENV=development
-    networks:
-      - ctf-network
-
-  # Database for our challenges
-  postgres:
-    image: postgres:15
-    environment:
-      - POSTGRES_DB=ctf_db
-      - POSTGRES_USER=ctf_user
-      - POSTGRES_PASSWORD=ctf_pass
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - ctf-network
+    web_challenge:
+        build: ./web-challenges
+        depends_on:
+            - db
+        ports:
+            - "3000:8000"
+        networks:
+            - ctf-network
+      
+    db:
+        image: postgres:latest 
+        environment:
+            - POSTGRES_DB=ctf_db
+            - POSTGRES_USER=ctf_user
+            - POSTGRES_PASSWORD=ctf_pass
+        restart: always
+        ports:
+            - "3001:5432"
+        networks:
+            - ctf-network
 
 volumes:
   postgres_data:
 
 networks:
-  ctf-network:
-    driver: bridge
+    ctf-network:
+        driver: bridge
