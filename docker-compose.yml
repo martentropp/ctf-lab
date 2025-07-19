@@ -19,9 +19,8 @@ services:
             - "3001:5432"
         networks:
             - ctf-network
-
-volumes:
-  postgres_data:
+        volumes:
+            - ./scoring-system/database/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 networks:
     ctf-network:
